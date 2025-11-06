@@ -11,7 +11,7 @@ public class BankingAppApplication {
 	static Logger log = LoggerFactory.getLogger(BankingAppApplication.class);
 
 	public static void main(String[] args) {
-		log.info("inside BankingAppApplication!!!!!");
+		//log.info("inside BankingAppApplication!!!!!");
 		SpringApplication.run(BankingAppApplication.class, args);
 	}
 
