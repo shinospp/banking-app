@@ -12,7 +12,6 @@ public class BankingAppApplication {
 
 	public static void main(String[] args) {
 		log.info("inside BankingAppApplication......");
-		log.info("second log......");
 		SpringApplication.run(BankingAppApplication.class, args);
 	}
 
