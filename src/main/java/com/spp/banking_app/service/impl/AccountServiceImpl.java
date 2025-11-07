@@ -1,5 +1,7 @@
 package com.spp.banking_app.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.spp.banking_app.dto.AccountDto;
@@ -66,5 +68,23 @@ public class AccountServiceImpl implements AccountService {
 		Account savedAccount = accountRepository.save(account);
 		return AccountMapper.mapToAccountDto(savedAccount);
 	}
+
+	@Override
+	public List<AccountDto> getAllAccounts() {
+		// TODO Auto-generated method stub
+		return accountRepository.findAll().stream()
+				.map(account -> AccountMapper.mapToAccountDto(account))
+				.toList();
+	}
+
+	@Override
+    public void deleteAccount(Long id) {
+    boolean exists = accountRepository.existsById(id);
+    if (!exists) {
+        throw new RuntimeException("Account with id " + id + " not found");
+    }
+    accountRepository.deleteById(id);
+}
+
 
 }

@@ -1,9 +1,11 @@
 package com.spp.banking_app.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,16 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spp.banking_app.dto.AccountDto;
+import com.spp.banking_app.repository.AccountRepository;
 import com.spp.banking_app.service.AccountService;
 
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
 
+    private final AccountRepository accountRepository;
+
 	private AccountService accountService;
 
-	public AccountController(AccountService accountService) {
+	public AccountController(AccountService accountService, AccountRepository accountRepository) {
 		this.accountService = accountService;
+		this.accountRepository = accountRepository;
 	}
 
 	// Add Account REST API
@@ -38,7 +44,7 @@ public class AccountController {
 
 		AccountDto accountDto = null;
 		try {
-			accountService.getAccountById(id);
+			accountDto = accountService.getAccountById(id);
 			return ResponseEntity.ok(accountDto);
 		} catch (RuntimeException e) {
 			// Example: account not found or insufficient balance
@@ -72,6 +78,29 @@ public class AccountController {
 
 		} catch (RuntimeException e) {
 			// Example: account not found or insufficient balance
+			return ResponseEntity.status(400).body(e.getMessage());
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("Internal server error.");
+		}
+
+	}
+	
+	//Get All Accounts REST API
+	@GetMapping("/getAll")
+	public ResponseEntity<List<AccountDto>> getAllAccounts() {
+		List<AccountDto> allAccounts = accountService.getAllAccounts();
+
+		return ResponseEntity.ok(allAccounts);
+	}
+	
+	//Delete Account REST API
+	@DeleteMapping("/{id}/remove")
+	public ResponseEntity<String> deleteAccount(@PathVariable Long id) {
+		try {
+			accountService.deleteAccount(id);
+			return ResponseEntity.ok("Account deleted successfully!");
+		} catch (RuntimeException e) {
+			// Example: account not found
 			return ResponseEntity.status(400).body(e.getMessage());
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body("Internal server error.");
