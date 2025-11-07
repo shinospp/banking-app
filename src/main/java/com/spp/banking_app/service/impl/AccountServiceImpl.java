@@ -41,8 +41,8 @@ public class AccountServiceImpl implements AccountService {
 
 		double total = account.getBalance() + amount;
 		account.setBalance(total);
-		accountRepository.save(account);
-		return AccountMapper.mapToAccountDto(account);
+		Account savedAccount = accountRepository.save(account);
+		return AccountMapper.mapToAccountDto(savedAccount);
 	}
 
 	@Override
@@ -63,8 +63,8 @@ public class AccountServiceImpl implements AccountService {
 		double total = account.getBalance() - amount;
 		account.setBalance(total);
 
-		accountRepository.save(account);
-		return AccountMapper.mapToAccountDto(account);
+		Account savedAccount = accountRepository.save(account);
+		return AccountMapper.mapToAccountDto(savedAccount);
 	}
 
 }
