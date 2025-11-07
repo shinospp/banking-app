@@ -22,13 +22,11 @@ import com.spp.banking_app.service.AccountService;
 @RequestMapping("/api/accounts")
 public class AccountController {
 
-    private final AccountRepository accountRepository;
 
 	private AccountService accountService;
 
-	public AccountController(AccountService accountService, AccountRepository accountRepository) {
+	public AccountController(AccountService accountService) {
 		this.accountService = accountService;
-		this.accountRepository = accountRepository;
 	}
 
 	// Add Account REST API
@@ -41,17 +39,20 @@ public class AccountController {
 	// Get Account REST API
 	@GetMapping("/{id}/fetchById")
 	public ResponseEntity<?> getAccountById(@PathVariable Long id) {
-
-		AccountDto accountDto = null;
-		try {
-			accountDto = accountService.getAccountById(id);
+//
+//		AccountDto accountDto = null;
+//		try {
+//			accountDto = accountService.getAccountById(id);
+//			return ResponseEntity.ok(accountDto);
+//		} catch (RuntimeException e) {
+//			// Example: account not found or insufficient balance
+//			return ResponseEntity.status(400).body(e.getMessage());
+//		} catch (Exception e) {
+//			return ResponseEntity.status(500).body("Internal server error.");
+//		}
+		
+		AccountDto accountDto = accountService.getAccountById(id);
 			return ResponseEntity.ok(accountDto);
-		} catch (RuntimeException e) {
-			// Example: account not found or insufficient balance
-			return ResponseEntity.status(400).body(e.getMessage());
-		} catch (Exception e) {
-			return ResponseEntity.status(500).body("Internal server error.");
-		}
 
 	}
 
@@ -71,17 +72,19 @@ public class AccountController {
 	public ResponseEntity<?> withdraw(@PathVariable Long id, @RequestBody Map<String, Double> request) {
 
 		Double amount = request.get("amount");
-		AccountDto withdraw = null;
-		try {
-			withdraw = accountService.withdraw(id, amount);
-			return ResponseEntity.ok(withdraw);
-
-		} catch (RuntimeException e) {
-			// Example: account not found or insufficient balance
-			return ResponseEntity.status(400).body(e.getMessage());
-		} catch (Exception e) {
-			return ResponseEntity.status(500).body("Internal server error.");
-		}
+		AccountDto withdraw = accountService.withdraw(id, amount);
+		return ResponseEntity.ok(withdraw);
+		
+//		try {
+//			withdraw = accountService.withdraw(id, amount);
+//			return ResponseEntity.ok(withdraw);
+//
+//		} catch (RuntimeException e) {
+//			// Example: account not found or insufficient balance
+//			return ResponseEntity.status(400).body(e.getMessage());
+//		} catch (Exception e) {
+//			return ResponseEntity.status(500).body("Internal server error.");
+//		}
 
 	}
 	
@@ -96,15 +99,17 @@ public class AccountController {
 	//Delete Account REST API
 	@DeleteMapping("/{id}/remove")
 	public ResponseEntity<String> deleteAccount(@PathVariable Long id) {
-		try {
-			accountService.deleteAccount(id);
-			return ResponseEntity.ok("Account deleted successfully!");
-		} catch (RuntimeException e) {
-			// Example: account not found
-			return ResponseEntity.status(400).body(e.getMessage());
-		} catch (Exception e) {
-			return ResponseEntity.status(500).body("Internal server error.");
-		}
+//		try {
+//			accountService.deleteAccount(id);
+//			return ResponseEntity.ok("Account deleted successfully!");
+//		} catch (RuntimeException e) {
+//			// Example: account not found
+//			return ResponseEntity.status(400).body(e.getMessage());
+//		} catch (Exception e) {
+//			return ResponseEntity.status(500).body("Internal server error.");
+//		}
+		accountService.deleteAccount(id);
+		return ResponseEntity.ok("Account deleted successfully!");
 
 	}
 

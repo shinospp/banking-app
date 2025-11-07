@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.spp.banking_app.dto.AccountDto;
 import com.spp.banking_app.entity.Account;
+import com.spp.banking_app.exception.AccountException;
 import com.spp.banking_app.mapper.AccountMapper;
 import com.spp.banking_app.repository.AccountRepository;
 import com.spp.banking_app.service.AccountService;
@@ -31,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
 	public AccountDto getAccountById(Long id) {
 		// TODO Auto-generated method stub
 		Account account = accountRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Account not found!!!"));
+				.orElseThrow(() -> new AccountException("Account not found!!!"));
 		return AccountMapper.mapToAccountDto(account);
 	}
 
@@ -39,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
 	public AccountDto deposit(Long id, Double amount) {
 		// TODO Auto-generated method stub
 		Account account = accountRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Account not found!!!"));
+				.orElseThrow(() -> new AccountException("Account not found!!!"));
 
 		double total = account.getBalance() + amount;
 		account.setBalance(total);
@@ -57,10 +58,10 @@ public class AccountServiceImpl implements AccountService {
 
 		// TODO Auto-generated method stub
 		Account account = accountRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Account not found!!!"));
+				.orElseThrow(() -> new AccountException("Account not found!!!"));
 
 		if (account.getBalance() < amount) {
-			throw new RuntimeException("Insufficient balance to withdraw");
+			throw new AccountException("Insufficient balance to withdraw");
 		}
 		double total = account.getBalance() - amount;
 		account.setBalance(total);
@@ -72,19 +73,16 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public List<AccountDto> getAllAccounts() {
 		// TODO Auto-generated method stub
-		return accountRepository.findAll().stream()
-				.map(account -> AccountMapper.mapToAccountDto(account))
-				.toList();
+		return accountRepository.findAll().stream().map(account -> AccountMapper.mapToAccountDto(account)).toList();
 	}
 
 	@Override
-    public void deleteAccount(Long id) {
-    boolean exists = accountRepository.existsById(id);
-    if (!exists) {
-        throw new RuntimeException("Account with id " + id + " not found");
-    }
-    accountRepository.deleteById(id);
-}
-
+	public void deleteAccount(Long id) {
+		boolean exists = accountRepository.existsById(id);
+		if (!exists) {
+			throw new AccountException("Account with id " + id + " not found");
+		}
+		accountRepository.deleteById(id);
+	}
 
 }
