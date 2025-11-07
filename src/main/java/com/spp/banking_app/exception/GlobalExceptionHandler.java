@@ -20,6 +20,15 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
 	
+	//Hanlde IllegalArgumentException  
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ErrorDetails> handleIllegalArgumentException(IllegalArgumentException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), exception.getMessage(),
+				webRequest.getDescription(false), "ILLEGAL_ARG_ERROR");
+
+		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
 	//Hanlde Generic exception 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorDetails> handleException(Exception exception, WebRequest webRequest) {
